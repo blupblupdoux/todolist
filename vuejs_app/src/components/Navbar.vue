@@ -1,56 +1,28 @@
 <template>
-  <v-app-bar app flat>
-    <div class="navbar d-flex justify-space-between">
-      <v-toolbar-title>Todo List</v-toolbar-title>
-      <div class="filter d-flex">
-        <div class="status">
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-              >
-                Statut
-                <v-icon>fa-angle-down</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(item, index) in status"
-                :key="index"
-              >
-                <v-list-item-title><a href="#">{{ item }}</a></v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-        <div class="category">
-        <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-              >
-                Catégories
-                <v-icon>fa-angle-down</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(item, index) in categories"
-                :key="index"
-              >
-                <v-list-item-title><a href="#">{{ item }}</a></v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-        <div class="archive">
-          <a href="#">Voir les archives</a>
-        </div>
+  <div class="d-flex justify-space-between align-center mx-auto px-10 py-5 d-flex indigo lighten-5">
+    <v-toolbar-title>Todo List</v-toolbar-title>
+    <div class="filter d-flex">
+      <div class="filterItem status">
+        <v-select
+        class="pa-0 ma-0"
+        :items="status"
+          label="Statut"
+        >
+        </v-select>
+      </div>
+      <div class="filterItem category">
+        <v-select
+          class="pa-0 ma-0"
+          :items="categories"
+          label="Catégories"
+        >
+        </v-select>
+      </div>
+      <div class="filterItem archive d-flex align-center">
+        <a class="" href="#">Voir les archives</a>
       </div>
     </div>
-  </v-app-bar>
+  </div>
 </template>
 
 <script>
@@ -65,7 +37,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .navbar {
-    width: 100%;
+  .filter {
+
+    .filterItem {
+      margin-right: 20px;
+    }
+
+    .archive > a {
+      white-space: nowrap;
+    }
   }
+  
 </style>
