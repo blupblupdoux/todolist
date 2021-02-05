@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
@@ -14,28 +15,45 @@ class Task
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("task")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("task")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("task")
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("task")
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="tasks")
+     * @Groups("task_category")
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups("task")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("task")
+     */
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -86,6 +104,30 @@ class Task
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
