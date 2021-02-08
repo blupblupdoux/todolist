@@ -1,10 +1,8 @@
 <template>
   <v-main class="mx-auto">
 
-    <div class="tasks">
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
+    <div v-if="tasks" class="tasks" >
+      <TaskItem v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
     </div>
 
     <TaskForm />
@@ -14,14 +12,32 @@
 
 <script>
 
+import { mapState } from 'vuex'
 import TaskItem from '../components/TaskItem.vue'
 import TaskForm from '../components/TaskForm.vue'
+
 
 export default {
   name: 'Home',
   components: {
     TaskItem,
     TaskForm,
+  },
+  data: () => ({
+    tasks: [],
+  }),
+  computed: {
+    ...mapState(['apiURL']),
+  },
+  methods: {
+    getTasks() {
+      this.$axios
+        .get(`${this.apiURL}/task`)
+        .then (response => { this.tasks = response.data })
+    }
+  },
+  mounted() {
+    this.getTasks()
   }
 };
 </script>

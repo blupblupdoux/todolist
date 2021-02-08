@@ -15,7 +15,9 @@
           class="mr-8"
           color="light-green darken-4"
           :items="categories"
+          item-text="name"
           label="Catégories"
+          clearable
         >
         </v-select>
       </v-col>
@@ -26,11 +28,27 @@
 
 <script>
 
+import { mapState } from 'vuex'
+
 export default {
   name: 'TaskForm',
   data: () => ({
-    categories: ['Aucune', 'Catego 1', 'Catego 2'],
+    categories: [],
   }),
+  computed: {
+    ...mapState(['apiURL']),
+  },
+  methods: {
+    getCategories() {
+      this.$axios
+      .get(`${this.apiURL}/category`)
+      .then(response => { this.categories = response.data })
+    }
+  },
+  mounted() {
+    this.getCategories()
+    
+  }
 };
 </script>
 
