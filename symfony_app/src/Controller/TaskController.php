@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Task;
 use App\Repository\TaskRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,13 +29,7 @@ class TaskController extends AbstractController
      */
     public function browse(): Response
     {
-        $tasks = $this->taskRepository->findTasks();
-
-        // dd($tasks);
-
-        $bla = $this->serializer->normalize($tasks, null, ['groups' => ['task']]);
-
-        return $this->json($bla);
+        return $this->json($this->serializer->normalize($this->taskRepository->findTasks(), null, ['groups' => ['task', 'task_category', 'category']]));
     }
 
     /**
@@ -44,11 +37,30 @@ class TaskController extends AbstractController
      */
     public function read($id): Response
     {
-        dd($this->task->findTask($id));
+        return $this->json($this->serializer->normalize($this->taskRepository->findTask($id), null, ['groups' => ['task', 'task_category', 'category']]));
+    }
 
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
+    /**
+     * @Route("/complete", name="browse_complete")
+     */
+    public function browseComplete(): Response
+    {
+        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(1), null, ['groups' => ['task', 'task_category', 'category']]));
+    }
+
+    /**
+     * @Route("/incomplete", name="browse_incomplete")
+     */
+    public function browseIncomplete(): Response
+    {
+        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(0), null, ['groups' => ['task', 'task_category', 'category']]));
+    }
+
+    /**
+     * @Route("/archived", name="browse_archived")
+     */
+    public function browseArchived(): Response
+    {
+        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(2), null, ['groups' => ['task', 'task_category', 'category']]));
     }
 }

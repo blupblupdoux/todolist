@@ -42,4 +42,16 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findTasksStatus($status)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t, c')
+            ->leftJoin('t.category', 'c')
+            ->where('t.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
