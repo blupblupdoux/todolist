@@ -44,7 +44,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/status/{status}", name="browse_status", requirements={"id"="\d+"})
+     * @Route("/status/{status}", name="browse_status", requirements={"status"="\d+"})
      */
     public function browseStatus($status): Response
     {
@@ -52,13 +52,28 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/category/{category}", name="browse_category", requirements={"id"="\d+"})
+     * @Route("/category/{category}", name="browse_category", requirements={"category"="\d+"})
      */
     public function browseCategory($category): Response
     {
         try {
             if($this->categoryRepository->findCategory($category)) {
                 return $this->json($this->serializer->normalize($this->taskRepository->findTasksCategory($category), null, ['groups' => ['task', 'task_category', 'category']]));
+            }
+            throw $this->createNotFoundException('The category does not exist');
+        } catch (\Error $e) {
+               error_log("Error caught: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/status/{status}/category/{category}", name="browse_status_category", requirements={"status"="\d+", "category"="\d+"})
+     */
+    public function browseStatusCategory($status, $category): Response
+    {
+        try {
+            if($this->categoryRepository->findCategory($category)) {
+                return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatusCategory($status, $category), null, ['groups' => ['task', 'task_category', 'category']]));
             }
             throw $this->createNotFoundException('The category does not exist');
         } catch (\Error $e) {

@@ -55,30 +55,38 @@ export default {
       .then(response => { this.categories = response.data })
     },
     onChange() {
+
       if(!this.filters.status && !this.filters.category) {
         this.$axios
           .get(`${this.apiURL}/task`)
-          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+
+        return
       }
 
       if(this.filters.status && this.filters.category) {
-          console.log('both')
+          this.$axios
+          .get(`${this.apiURL}/task/status/${this.filters.status}/category/${this.filters.category}`)
+          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+
           return
-        }
+      }
 
       if(this.filters.status) {
         this.$axios
           .get(`${this.apiURL}/task/status/${this.filters.status}`)
-          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+
+          return
       }
 
       if(this.filters.category) {
         this.$axios
           .get(`${this.apiURL}/task/category/${this.filters.category}`)
-          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
-      }
+          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
 
-      
+          return
+      }
     }
   },
   mounted() {

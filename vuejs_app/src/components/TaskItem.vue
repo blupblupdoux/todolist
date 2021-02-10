@@ -1,23 +1,40 @@
 <template>
-<v-card class="task d-flex justify-space-between mt-4 pa-2" color="grey lighten-4" rounded flat>
-    <v-card-text class="d-flex justify-space-between">
-        <p class="task-title mb-0">{{ task.title }}</p>
-        <p v-if="task.category" class="task-category mb-0 mr-8">{{ task.category.name }}</p>
-    </v-card-text>
-    <v-card-actions>
-        <v-btn class="green px-0 py-5" small><v-icon color="white">fa-check-square-o</v-icon></v-btn>
-        <v-btn class="orange px-0 py-5" small><v-icon color="white">fa-pencil-square-o</v-icon></v-btn>
-        <v-btn class="red px-0 py-5" small><v-icon color="white">fa-archive</v-icon></v-btn>
-    </v-card-actions>
+
+<v-card class="task mt-4 pa-2" color="grey lighten-4" rounded flat>
+  <v-col cols=12 class="d-flex justify-space-between">
+      <v-card-text class="d-flex justify-space-between">
+          <p 
+            class="task-title mb-0" 
+            v-bind:class="{ 'text-decoration-line-through': task.status == 1, 'grey--text text--darken-2': task.status == 2 }"
+          >
+            {{ task.title }}
+          </p>
+          <p v-if="task.category" class="task-category mb-0 mr-8">{{ task.category.name }}</p>
+      </v-card-text>
+
+      <v-card-actions>
+          <v-btn class="green px-0 py-5" small><v-icon color="white">fa-check-square-o</v-icon></v-btn>
+          <v-btn class="orange px-0 py-5" small><v-icon color="white">fa-pencil-square-o</v-icon></v-btn>
+          <v-btn class="red px-0 py-5" small><v-icon color="white">fa-archive</v-icon></v-btn>
+      </v-card-actions>
+  </v-col>
+
+  <v-progress-linear 
+    value="15"
+    :background-color="task.status == 2 ? 'grey lighten-2' : 'light-green lighten-4'"
+    :color="task.status == 2 ? 'grey darken-1' : 'light-green darken-3'"
+  >
+  </v-progress-linear>
 </v-card>
+
 </template>
 
 <script>
 
 export default {
-  name: 'TaskItem',
-  props: ['task'],
-  data: () => ({
-  }),
+name: 'TaskItem',
+props: ['task'],
+data: () => ({
+}),
 };
 </script>
