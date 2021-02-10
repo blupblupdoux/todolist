@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
 use App\Repository\TaskRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,11 +16,13 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class TaskController extends AbstractController
 {
-    private $taskRepository;
+    private $categoryRepository;
     private $serializer;
+    private $taskRepository;
 
-    public function __construct(TaskRepository $taskRepository, SerializerInterface $serializer)
+    public function __construct(CategoryRepository $categoryRepository, TaskRepository $taskRepository, SerializerInterface $serializer)
     {
+        $this->categoryRepository = $categoryRepository;
         $this->taskRepository = $taskRepository;
         $this->serializer = $serializer;
     }
@@ -41,26 +44,25 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/complete", name="browse_complete")
+     * @Route("/status/{status}", name="browse_status", requirements={"id"="\d+"})
      */
-    public function browseComplete(): Response
+    public function browseStatus($status): Response
     {
-        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(1), null, ['groups' => ['task', 'task_category', 'category']]));
+        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus($status), null, ['groups' => ['task', 'task_category', 'category']]));
     }
 
     /**
-     * @Route("/incomplete", name="browse_incomplete")
+     * @Route("/category/{category}", name="browse_category", requirements={"id"="\d+"})
      */
-    public function browseIncomplete(): Response
+    public function browseCategory($category): Response
     {
-        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(0), null, ['groups' => ['task', 'task_category', 'category']]));
-    }
-
-    /**
-     * @Route("/archived", name="browse_archived")
-     */
-    public function browseArchived(): Response
-    {
-        return $this->json($this->serializer->normalize($this->taskRepository->findTasksStatus(2), null, ['groups' => ['task', 'task_category', 'category']]));
+        try {
+            if($this->categoryRepository->findCategory($category)) {
+                return $this->json($this->serializer->normalize($this->taskRepository->findTasksCategory($category), null, ['groups' => ['task', 'task_category', 'category']]));
+            }
+            throw $this->createNotFoundException('The category does not exist');
+        } catch (\Error $e) {
+               error_log("Error caught: " . $e->getMessage());
+        }
     }
 }

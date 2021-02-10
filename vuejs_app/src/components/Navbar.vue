@@ -4,22 +4,28 @@
     <div class="filter d-flex pt-6 ">
       <div class="status mr-3">
         <v-select
-          class="pa-0 ma-0"
-          color="light-green darken-4"
+          @change="onChange"
+          v-model="filters.status"
           :items="status"
           item-text="name"
+          item-value="id"
           label="Statut"
+          class="pa-0 ma-0"
+          color="light-green darken-4"
           clearable
         >
         </v-select>
       </div>
       <div class="category mr-3">
         <v-select
-          class="pa-0 ma-0"
-          color="light-green darken-4"
+          @change="onChange"
+          v-model="filters.category"
           :items="categories"
           item-text="name"
+          item-value="id"
           label="Catégories"
+          class="pa-0 ma-0"
+          color="light-green darken-4"
           clearable
         >
         </v-select>
@@ -35,8 +41,9 @@ import { mapState } from 'vuex'
 export default {
   name: 'Navbar',
   data: () => ({
-    status: [{id:"0", name:'Incomplètes'}, {id:"1", name:'Complètes'}, {id:"2", name:'Archivées'}],
     categories: [],
+    filters: {status: null, category: null},
+    status: [{id:"0", name:'Incomplètes'}, {id:"1", name:'Complètes'}, {id:"2", name:'Archivées'}],
   }),
   computed: {
     ...mapState(['apiURL']),
@@ -46,6 +53,32 @@ export default {
       this.$axios
       .get(`${this.apiURL}/category`)
       .then(response => { this.categories = response.data })
+    },
+    onChange() {
+      if(!this.filters.status && !this.filters.category) {
+        this.$axios
+          .get(`${this.apiURL}/task`)
+          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+      }
+
+      if(this.filters.status && this.filters.category) {
+          console.log('both')
+          return
+        }
+
+      if(this.filters.status) {
+        this.$axios
+          .get(`${this.apiURL}/task/status/${this.filters.status}`)
+          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+      }
+
+      if(this.filters.category) {
+        this.$axios
+          .get(`${this.apiURL}/task/category/${this.filters.category}`)
+          .then( response => { return this.$emit('filtered-tasks', {filteredTasks: response.data}) })
+      }
+
+      
     }
   },
   mounted() {

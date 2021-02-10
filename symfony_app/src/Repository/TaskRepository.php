@@ -54,4 +54,16 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findTasksCategory($category)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('t, c')
+            ->leftJoin('t.category', 'c')
+            ->where('t.category = :category')
+            ->setParameter('category', $category)
+        ;
+        
+        return $qb->getQuery()->getResult();
+    }
 }
