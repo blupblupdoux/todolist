@@ -6,7 +6,7 @@
     <v-main class="mx-auto">
 
       <div v-if="tasks" class="tasks" >
-        <TaskItem v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
+        <TaskItem @updateTasks="getTasks" v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
       </div>
 
       <TaskForm @updateTasks="getTasks" />

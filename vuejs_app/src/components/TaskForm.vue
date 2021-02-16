@@ -45,16 +45,16 @@ export default {
   methods: {
     getCategories() {
       this.$axios
-      .get(`${this.apiURL}/category`)
-      .then(response => { this.categories = response.data })
+        .get(`${this.apiURL}/category`)
+        .then(response => { this.categories = response.data })
     },
     onSubmit() {
       this.$axios
-      .post(`${this.apiURL}/task/add`, JSON.stringify(this.task))
-      .then(() => { 
-        this.$emit('updateTasks') 
-        this.task = {}
-      })
+        .post(`${this.apiURL}/task/add`, JSON.stringify(this.task))
+        .then(() => { 
+          this.$emit('updateTasks') 
+          this.task = {}
+        })
     }
   },
   mounted() {
