@@ -1,5 +1,5 @@
 <template>
-  <v-form class="d-flex light-green lighten-5 d-flex align-center mt-4 pt-3 px-4">
+  <v-form @submit.prevent="onSubmit" class="d-flex light-green lighten-5 d-flex align-center mt-4 pt-3 px-4">
     <v-row>
       <v-col cols="8">
         <v-text-field 
@@ -25,7 +25,7 @@
         </v-select>
       </v-col>
     </v-row>
-      <v-btn @click="onSubmit" class="mt-n2" color="light-green lighten-4">Ajouter</v-btn>
+      <v-btn type="submit" class="mt-n2 py-5" color="light-green lighten-4" small><v-icon color="light-green darken-4">fa-plus-square-o</v-icon></v-btn>
   </v-form>
 </template>
 
