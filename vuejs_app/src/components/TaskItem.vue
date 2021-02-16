@@ -18,7 +18,7 @@
           <v-btn v-if="task.status == 2" @click="updateStatus(1)" class="green px-0 py-5" small><v-icon color="white">fa-undo</v-icon></v-btn>
           <v-btn class="orange px-0 py-5" small><v-icon color="white">fa-pencil-square-o</v-icon></v-btn>
           <v-btn v-if="task.status != 2" @click="updateStatus(2)" class="red px-0 py-5" small><v-icon color="white">fa-archive</v-icon></v-btn>
-          <v-btn v-if="task.status == 2" class="red px-0 py-5" small><v-icon color="white">fa-trash</v-icon></v-btn>
+          <v-btn v-if="task.status == 2" @click="deleteTask" class="red px-0 py-5" small><v-icon color="white">fa-trash</v-icon></v-btn>
       </v-card-actions>
   </v-col>
 
@@ -46,25 +46,13 @@ export default {
   },
   methods: {
     updateStatus(newStatus) {
-
-      // let newStatus = null;
-
-      // switch (this.task.status) {
-      //   case 0:
-      //     newStatus = 1
-      //     break;
-
-      //   case 1:
-      //     newStatus = 0
-      //     break;
-
-      //   case 2:
-      //     newStatus = 1
-      //     break;
-      // }
-
       this.$axios
         .post(`${this.apiURL}/task/edit/status/${newStatus}`, JSON.stringify(this.task))
+        .then(() => { this.$emit('updateTasks') })
+    },
+    deleteTask() {
+      this.$axios
+        .post(`${this.apiURL}/task/delete`, JSON.stringify(this.task))
         .then(() => { this.$emit('updateTasks') })
     }
   },

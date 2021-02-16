@@ -191,4 +191,39 @@ class TaskController extends AbstractController
                error_log("Error caught: " . $e->getMessage());
         }
     }
+
+    /**
+     * @Route("/delete", name="delete")
+     */
+    public function delete(Request $request) : Response
+    {
+        try 
+        {
+            $data = json_decode($request->getContent(), true);
+
+            if($data)
+            { 
+                if(array_key_exists('id', $data))
+                {
+                    $task = $this->taskRepository->find($data['id']);
+
+                    if($task) 
+                    {
+                        $taskId = $task->getId();
+                        
+                        $this->em->remove($task);
+                        $this->em->flush();
+                        return new Response('Task n°' . $taskId . ' deleted', Response::HTTP_OK);
+                    }
+                    return new Response('Task not found', Response::HTTP_NOT_FOUND);
+                }
+                return new Response('Invalid request content', Response::HTTP_BAD_REQUEST);
+            }
+            return new Response('Request can not be empty', Response::HTTP_BAD_REQUEST);
+
+        } catch (\Error $e) 
+        {
+               error_log("Error caught: " . $e->getMessage());
+        }
+    }
 }

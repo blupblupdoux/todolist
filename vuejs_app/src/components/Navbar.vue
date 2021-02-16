@@ -55,38 +55,7 @@ export default {
       .then(response => { this.categories = response.data })
     },
     onChange() {
-
-      if(!this.filters.status && !this.filters.category) {
-        this.$axios
-          .get(`${this.apiURL}/task`)
-          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
-
-        return
-      }
-
-      if(this.filters.status && this.filters.category) {
-          this.$axios
-          .get(`${this.apiURL}/task/status/${this.filters.status}/category/${this.filters.category}`)
-          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
-
-          return
-      }
-
-      if(this.filters.status) {
-        this.$axios
-          .get(`${this.apiURL}/task/status/${this.filters.status}`)
-          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
-
-          return
-      }
-
-      if(this.filters.category) {
-        this.$axios
-          .get(`${this.apiURL}/task/category/${this.filters.category}`)
-          .then( response => { this.$emit('filtered-tasks', {filteredTasks: response.data}) })
-
-          return
-      }
+      this.$emit('filters', {filters: this.filters})
     }
   },
   mounted() {

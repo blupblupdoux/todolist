@@ -1,16 +1,16 @@
 <template>
   <v-container>
 
-    <Navbar @filtered-tasks="updateTasks" />
+    <Navbar @filters="getFilters" />
 
     <v-main class="mx-auto">
 
+      <TaskForm @updateTasks="updateTasks" />
+
       <div v-if="tasks" class="tasks" >
-        <TaskItem @updateTasks="getTasks" v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
+        <TaskItem @updateTasks="updateTasks" v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
       </div>
 
-      <TaskForm @updateTasks="getTasks" />
-      
     </v-main>
   </v-container>
 </template>
@@ -32,6 +32,7 @@ export default {
   },
   data: () => ({
     tasks: [],
+    filters: {},
   }),
   computed: {
     ...mapState(['apiURL']),
@@ -42,8 +43,43 @@ export default {
         .get(`${this.apiURL}/task`)
         .then (response => { this.tasks = response.data })
     },
-    updateTasks(payload) {
-      this.tasks = payload.filteredTasks
+    getFilters(payload) {
+      this.filters = payload.filters
+      this.updateTasks()
+    },
+    updateTasks() {
+
+       if(!this.filters.status && !this.filters.category) {
+        this.$axios
+          .get(`${this.apiURL}/task`)
+          .then( response => { this.tasks = response.data })
+
+        return
+      }
+
+      if(this.filters.status && this.filters.category) {
+          this.$axios
+          .get(`${this.apiURL}/task/status/${this.filters.status}/category/${this.filters.category}`)
+          .then( response => { this.tasks = response.data })
+
+          return
+      }
+
+      if(this.filters.status) {
+        this.$axios
+          .get(`${this.apiURL}/task/status/${this.filters.status}`)
+          .then( response => { this.tasks = response.data })
+
+          return
+      }
+
+      if(this.filters.category) {
+        this.$axios
+          .get(`${this.apiURL}/task/category/${this.filters.category}`)
+          .then( response => { this.tasks = response.data })
+
+          return
+      }
     }
   },
   mounted() {
