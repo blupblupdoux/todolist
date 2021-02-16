@@ -13,14 +13,17 @@
       </v-card-text>
 
       <v-card-actions>
-          <v-btn class="green px-0 py-5" small><v-icon color="white">fa-check-square-o</v-icon></v-btn>
+          <v-btn @click="updateStatus" class="green px-0 py-5" small>
+            <v-icon v-if="task.status == 0" color="white">fa-check-square-o</v-icon>
+            <v-icon v-if="task.status == 1" color="white">fa-backward</v-icon>
+          </v-btn>
           <v-btn class="orange px-0 py-5" small><v-icon color="white">fa-pencil-square-o</v-icon></v-btn>
           <v-btn class="red px-0 py-5" small><v-icon color="white">fa-archive</v-icon></v-btn>
       </v-card-actions>
   </v-col>
 
   <v-progress-linear 
-    value="15"
+    value="30"
     :background-color="task.status == 2 ? 'grey lighten-2' : 'light-green lighten-4'"
     :color="task.status == 2 ? 'grey darken-1' : 'light-green darken-3'"
   >
@@ -32,9 +35,14 @@
 <script>
 
 export default {
-name: 'TaskItem',
-props: ['task'],
-data: () => ({
-}),
+  name: 'TaskItem',
+  props: ['task'],
+  data: () => ({
+  }),
+  methods: {
+    updateStatus() {
+
+    }
+  },
 };
 </script>

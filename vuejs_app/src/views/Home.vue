@@ -9,7 +9,7 @@
         <TaskItem v-for="task in tasks" :key="`task-${task.id}`" :task="task" />
       </div>
 
-      <TaskForm />
+      <TaskForm @updateTasks="getTasks" />
       
     </v-main>
   </v-container>

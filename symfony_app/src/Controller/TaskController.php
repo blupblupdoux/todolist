@@ -157,4 +157,38 @@ class TaskController extends AbstractController
                error_log("Error caught: " . $e->getMessage());
         }
     }
+
+    /**
+     * @Route("/edit/status/{status}", name="edit_status", requirements={"status"="\d+"})
+     */
+    public function editStatus($status, Request $request) : Response
+    {
+        try 
+        {
+            $data = json_decode($request->getContent(), true);
+
+            if($data)
+            { 
+                if(array_key_exists('id', $data))
+                {
+                    $task = $this->taskRepository->find($data['id']);
+
+                    if($task) 
+                    {
+                        $task->setUpdatedAt(new \DateTime());
+                        $task->setStatus($status);
+                        $this->em->flush();
+                        return new Response('Status of task n°' . $task->getId() . ' edited', Response::HTTP_OK);
+                    }
+                    return new Response('Task not found', Response::HTTP_NOT_FOUND);
+                }
+                return new Response('Invalid request content', Response::HTTP_BAD_REQUEST);
+            }
+            return new Response('Request can not be empty', Response::HTTP_BAD_REQUEST);
+
+        } catch (\Error $e) 
+        {
+               error_log("Error caught: " . $e->getMessage());
+        }
+    }
 }
